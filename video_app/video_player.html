@@ -1,0 +1,35 @@
+<video id="video" width="640" height="480" autoplay></video>
+<canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const delayInSeconds = 10;
+
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+        .then(function(stream) {
+            video.srcObject = stream;
+            video.play();
+        })
+        .catch(function(err) {
+            console.log("An error occurred: " + err);
+        });
+
+    function capture() {
+        const context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const image_data = canvas.toDataURL('image/jpeg');
+        const csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        const url = "{% url 'video_player' %}";
+        const data = {
+            image_data: image_data,
+            csrfmiddlewaretoken: csrf_token
+        };
+        fetch(url, {
+            method: 'POST',
+            body: new URLSearchParams(data),
+        });
+    }
+
+    setInterval(capture, delayInSeconds * 1000);
+</script>

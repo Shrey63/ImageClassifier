@@ -1,0 +1,27 @@
+<!-- Load the YouTube Player API -->
+<script src="https://www.youtube.com/player_api"></script>
+
+<!-- Create a div for the YouTube player -->
+<div id="player"></div>
+
+<script>
+  // Initialize the YouTube player
+  var player;
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+      height: '360',
+      width: '640',
+      videoId: 'YOUR_VIDEO_ID',
+      events: {
+        'onReady': onPlayerReady
+      }
+    });
+  }
+
+  // When the player is ready, start playing the video
+  function onPlayerReady(event) {
+    event.target.playVideo();
+  }
+</script>
+
+
